@@ -6,7 +6,7 @@ module BitAttrs
       @mask = mask.to_i
     end
 
-    def flags
+    def to_h
       @flags_map.inject({}) do |memo, (flag, _i)|
         memo.merge! flag => self[flag]
       end
@@ -30,7 +30,7 @@ module BitAttrs
     end
 
     def inspect
-      flags.inspect
+      to_h.inspect
     end
 
     def to_i
