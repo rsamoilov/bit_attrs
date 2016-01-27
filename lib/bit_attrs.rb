@@ -1,6 +1,6 @@
 require "bit_attrs/bitset"
 require "bit_attrs/version"
-require "bit_attrs/active_record_binding"
+require "bit_attrs/bindings"
 
 module BitAttrs
 
@@ -21,7 +21,7 @@ module BitAttrs
       flags_map.each do |attr_name, flags_list|
         @bit_attrs[attr_name] = check_flags_list(flags_list)
         define_alias_methods(attr_name, @bit_attrs[attr_name])
-        ActiveRecordBinding.create(self, attr_name)
+        Bindings.create(self, attr_name)
       end
     end
 

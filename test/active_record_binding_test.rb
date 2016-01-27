@@ -1,12 +1,18 @@
 require 'test_helper'
 
 class ActiveRecordBindingTest < Minitest::Test
+  module ActiveRecord
+    module Base
+    end
+  end
+
   User = Struct.new(:name, :roles_mask, :access_mask) do
+    include ActiveRecord::Base
     include BitAttrs
   end
 
   def setup
-    Object.const_set :ActiveRecord, true
+    Object.const_set :ActiveRecord, ActiveRecord
     User.bitset roles: [:admin, :user, :guest], access: [:read, :write]
   end
 
