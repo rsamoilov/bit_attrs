@@ -44,6 +44,13 @@ class BitsetTest < Minitest::Test
     assert_equal({ admin: true, user: false, guest: true }, @bitset.to_h)
   end
 
+  def test_string_keys
+    @bitset['admin'] = true
+
+    assert @bitset['admin']
+    assert_equal({ admin: true, user: false, guest: false }, @bitset.to_h)
+  end
+
   def test_custom_indexes
     bitset = BitAttrs::Bitset.new({ admin: 2, user: 4, guest: 6 })
     bitset[:user] = true

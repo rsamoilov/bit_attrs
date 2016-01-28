@@ -69,6 +69,14 @@ class BitAttrsTest < Minitest::Test
     assert_equal 2 ** 5 + 2 ** 10, user.access_mask
   end
 
+  def test_hash_flags_are_set_correctly
+    user = AccessUser.new
+    user.access = { read: true }
+
+    assert user.read
+    assert_equal({ read: true, write: false }, user.access.to_h)
+  end
+
   TestUser = Struct.new(:roles_mask, :access_mask, :rights_mask) do
     include BitAttrs
     bitset roles: [:admin, :user], access: { read: 1, write: 2 }
