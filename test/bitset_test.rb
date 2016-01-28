@@ -55,4 +55,12 @@ class BitsetTest < Minitest::Test
     assert_equal({ admin: true, user: true, guest: true }, bitset.to_h)
     assert_equal '1010100', bitset.to_i.to_s(2)
   end
+
+  def test_each
+    assert_instance_of Enumerator, @bitset.each
+    assert_equal 3, @bitset.each.size
+    @bitset[:user] = true
+
+    @bitset.each { |flag, bool| assert_equal bool, @bitset[flag] }
+  end
 end

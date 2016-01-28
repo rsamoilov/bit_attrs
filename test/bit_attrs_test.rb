@@ -40,6 +40,14 @@ class BitAttrsTest < Minitest::Test
     assert_equal 2, @user.roles_mask
   end
 
+  def test_one_can_assign_bitset
+    new_bitset = User.new.roles
+    new_bitset[:guest] = true
+    @user.roles = new_bitset
+
+    assert_equal({ admin: false, user: false, guest: true }, @user.roles.to_h)
+  end
+
   AccessUser = Struct.new(:name, :access_mask) do
     include BitAttrs
     bitset access: { read: 5, write: 10 }

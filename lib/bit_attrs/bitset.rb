@@ -29,6 +29,10 @@ module BitAttrs
       end
     end
 
+    def each(&block)
+      self.to_h.each &block
+    end
+
     def inspect
       to_h.inspect
     end
