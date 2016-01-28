@@ -1,8 +1,11 @@
 # BitAttrs
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/bit_attrs`. To experiment with that code, run `bin/console` for an interactive prompt.
+BitAttrs allows to store a set of boolean values in one field.
 
-TODO: Delete this and the text above, and describe your gem
+* Simple and easy to use
+* Has no additional dependencies, like ActiveRecord
+* Works well with ActiveRecord, DataMapper, Virtus or POROs
+* Has convenient search scopes for ActiveRecord and DataMapper
 
 ## Installation
 
@@ -22,20 +25,87 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+BitAttrs has similar to Rails 4 enums syntax:
 
-## Development
+````ruby
+class User < ActiveRecord::Base
+  include BitAttrs
+  bitset roles: [:admin, :user, :guest]
+end
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+In this case, BitAttrs will expect ```roles_mask``` field to actually save roles in:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+#<User id: 1, name: 'test user', email: "test@gmail.com", roles_mask: 2>
+```
+
+You can freely add new attributes to the end of the list without changing already existing records:
+
+````ruby
+class User < ActiveRecord::Base
+  include BitAttrs
+  bitset roles: [:admin, :user, :guest, :developer]
+end
+```
+
+Similarly to Rails enums, if you want to delete some of the attributes, you might want to use hash syntax, where keys are attribute names and values are indexes:
+
+````ruby
+class User < ActiveRecord::Base
+  include BitAttrs
+  bitset roles: { admin: 0, user: 1, developer: 3 }
+end
+```
+
+Attributes can be accessed on the instance level or through the ```roles``` method:
+
+```ruby
+> user
+=> #<User id: 1, name: 'test user', email: "test@gmail.com", roles_mask: 2>
+
+> user.user?
+=> true
+
+> user.roles
+=> { admin: false, user: true, guest: false }
+```
+
+Update all attributes:
+
+```ruby
+> user.update(roles: { guest: true }) && user.roles
+=> { admin: false, user: false, guest: true }
+```
+
+Update single attribute:
+
+```ruby
+> user.admin = true
+=> { admin: true, user: false, guest: true }
+```
+
+### Scopes
+
+Considering the example above, BitAttrs will create following search scopes:
+
+* User.with_roles
+* User.without_roles
+
+Example:
+
+```ruby
+> User.with_roles(:user)
+=> all users which have role :user set to true
+> User.with_roles(:admin, :user).without_roles(:developer)
+=> all users which have following roles set: { admin: true, user: true, developer: false }
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/bit_attrs. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rsamoilov/bit_attrs. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
