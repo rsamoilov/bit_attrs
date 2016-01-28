@@ -49,6 +49,12 @@ module BitAttrs
       flags_map.each do |flag, _i|
         define_method(flag) { self.send(attr_name)[flag] }
         define_method("#{flag}?") { self.send(flag) }
+
+        define_method("#{flag}=") do |bool|
+          bitset = self.send(attr_name)
+          bitset[flag] = bool
+          self.send("#{attr_name}_mask=", bitset.to_i)
+        end
       end
     end
   end

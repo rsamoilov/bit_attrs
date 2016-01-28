@@ -40,6 +40,14 @@ class BitAttrsTest < Minitest::Test
     assert_equal 2, @user.roles_mask
   end
 
+  def test_single_assignment
+    @user.guest = true
+    assert_equal({ admin: false, user: false, guest: true }, @user.roles.to_h)
+
+    @user.admin = true
+    assert_equal({ admin: true, user: false, guest: true }, @user.roles.to_h)
+  end
+
   def test_one_can_assign_bitset
     new_bitset = User.new.roles
     new_bitset[:guest] = true
