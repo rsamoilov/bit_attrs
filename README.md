@@ -71,9 +71,12 @@ Attributes can be accessed on the instance level or through the ```roles``` meth
 => { admin: false, user: true, guest: false }
 ```
 
-Update all attributes:
+Update all attributes (with overwriting):
 
 ```ruby
+> user.roles
+=> { admin: false, user: true, guest: false }
+
 > user.update(roles: { guest: true }) && user.roles
 => { admin: false, user: false, guest: true }
 ```
@@ -81,16 +84,21 @@ Update all attributes:
 Update single attribute:
 
 ```ruby
+> user.roles
+=> { admin: false, user: true, guest: false }
+
 > user.admin = true
-=> { admin: true, user: false, guest: true }
+=> { admin: true, user: true, guest: false }
 ```
 
 ### Scopes
 
 Considering the example above, BitAttrs will create following search scopes:
 
+```
 * User.with_roles
 * User.without_roles
+```
 
 Example:
 
