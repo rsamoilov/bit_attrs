@@ -9,8 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Roman Samoilov"]
   spec.email         = ["rsamoilov@yandex.ua"]
 
-  spec.summary       = %q{Store a set of boolean values in one field}
-  spec.description   = %q{}
+  spec.summary       = %q{Store a set of boolean values as a bitmask in one field. Works well with ActiveRecord, DataMapper, Virtus or POROs.}
   spec.homepage      = "https://github.com/rsamoilov/bit_attrs"
   spec.license       = "MIT"
 
