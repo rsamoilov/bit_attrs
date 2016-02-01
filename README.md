@@ -1,5 +1,7 @@
 # BitAttrs
 
+[![Build Status](https://travis-ci.org/rsamoilov/bit_attrs.svg?branch=master)](https://travis-ci.org/rsamoilov/bit_attrs)
+
 BitAttrs allows to store a set of boolean values in one field.
 
 * Simple and easy to use
